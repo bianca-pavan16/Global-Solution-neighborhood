@@ -1,6 +1,8 @@
 
 
+
 from dados import ocorrencias
+from datetime import datetime
 
 
 # CATEGORIAS DISPONÍVEIS
@@ -29,7 +31,18 @@ def gerar_codigo():
     return f"OC{novo_numero:03d}"
 
 
-# 2. MENU PRINCIPAL
+# 2. VALIDAR DATA
+def validar_data(data):
+
+    try:
+        datetime.strptime(data, "%d/%m/%Y")
+        return True
+
+    except ValueError:
+        return False
+
+
+# 3. MENU PRINCIPAL
 def exibir_menu():
 
     print("\n" + "=" * 45)
@@ -47,43 +60,39 @@ def exibir_menu():
     print("=" * 45)
 
 
-# 3. CADASTRAR OCORRÊNCIA
+# 4. CADASTRAR OCORRÊNCIA
 def cadastrar_ocorrencia():
 
-    print("\n--- CADASTRO DE OCORRÊNCIA ---")
+    print("\n" + "=" * 45)
+    print("         CADASTRO DE OCORRÊNCIA")
+    print("=" * 45)
 
-    # Gerar código automaticamente
-    codigo = gerar_codigo()
-
-    print("Código gerado:", codigo)
-
-    # Exibir categorias disponíveis
-    print("\nSelecione a categoria:")
+    # Selecionar categoria
+    print("\nCategorias disponíveis:")
 
     for indice, categoria in CATEGORIAS.items():
         print(f"{indice} - {categoria}")
 
     opcao_categoria = input(
-        "Digite o número da categoria: "
+        "\nDigite o número da categoria: "
     ).strip()
 
-    # Validar se a entrada é numérica
     if not opcao_categoria.isdigit():
-        print("Erro: digite um número válido.")
+        print("\nERRO: informe o número de uma categoria.")
+        print("Exemplo: digite 1 para Iluminação.")
         return
 
     opcao_categoria = int(opcao_categoria)
 
-    # Validar se a categoria existe
     if opcao_categoria not in CATEGORIAS:
-        print("Erro: categoria inexistente.")
+        print("\nERRO: categoria não encontrada.")
+        print("Escolha uma opção entre 1 e 4.")
         return
 
-    # Recuperar nome da categoria
     categoria = CATEGORIAS[opcao_categoria]
 
-    # Solicitar demais informações
-    descricao = input("Descrição: ").strip()
+    # Solicitar informações
+    descricao = input("\nDescrição da ocorrência: ").strip()
 
     localidade = input("Localidade genérica: ").strip()
 
@@ -92,9 +101,20 @@ def cadastrar_ocorrencia():
     ).strip()
 
     # Validar campos obrigatórios
-    if descricao == "" or localidade == "" or data_abertura == "":
-        print("Erro: todos os campos são obrigatórios.")
+    if not descricao or not localidade or not data_abertura:
+        print("\nERRO: existem campos obrigatórios vazios.")
+        print("Preencha a descrição, a localidade e a data.")
         return
+
+    # Validar formato e existência da data
+    if not validar_data(data_abertura):
+        print("\nERRO: data inválida.")
+        print("Informe uma data real no formato DD/MM/AAAA.")
+        print("Exemplo: 16/11/2026.")
+        return
+
+    # Gerar código após validar os dados
+    codigo = gerar_codigo()
 
     # Criar dicionário da ocorrência
     nova_ocorrencia = {
@@ -109,46 +129,60 @@ def cadastrar_ocorrencia():
     # Adicionar ocorrência à lista principal
     ocorrencias.append(nova_ocorrencia)
 
-    print("\nOcorrência cadastrada com sucesso!")
-    print("Código:", codigo)
-    print("Categoria:", categoria)
+    # Confirmar cadastro
+    print("\n" + "=" * 45)
+    print("     OCORRÊNCIA CADASTRADA COM SUCESSO!")
+    print("=" * 45)
+
+    print(f"Código: {codigo}")
+    print(f"Categoria: {categoria}")
+    print(f"Descrição: {descricao}")
+    print(f"Localidade: {localidade}")
+    print(f"Data de abertura: {data_abertura}")
+    print("Status inicial: Aberta")
+
+    print("=" * 45)
+    print("Guarde o código para consultar a ocorrência.")
 
 
-# 4. LISTAR OCORRÊNCIAS
+# 5. LISTAR OCORRÊNCIAS
 def listar_ocorrencias():
 
-    print("\n--- LISTA DE OCORRÊNCIAS ---")
+    print("\n" + "=" * 45)
+    print("          LISTA DE OCORRÊNCIAS")
+    print("=" * 45)
 
-    # Verificar se existem registros
     if len(ocorrencias) == 0:
 
-        print("Nenhuma ocorrência cadastrada.")
+        print("\nNenhuma ocorrência cadastrada.")
+        print("Utilize a opção 1 para registrar uma nova ocorrência.")
 
     else:
 
         for ocorrencia in ocorrencias:
 
-            print("\n" + "-" * 40)
+            print("\n" + "-" * 45)
 
-            print("Código:", ocorrencia["codigo"])
-            print("Categoria:", ocorrencia["categoria"])
-            print("Descrição:", ocorrencia["descricao"])
-            print("Localidade:", ocorrencia["localidade"])
-            print("Data de abertura:", ocorrencia["data_abertura"])
-            print("Status:", ocorrencia["status"])
+            print(f"Código: {ocorrencia['codigo']}")
+            print(f"Categoria: {ocorrencia['categoria']}")
+            print(f"Descrição: {ocorrencia['descricao']}")
+            print(f"Localidade: {ocorrencia['localidade']}")
+            print(f"Data de abertura: {ocorrencia['data_abertura']}")
+            print(f"Status: {ocorrencia['status']}")
 
-        print("\n" + "-" * 40)
-        print("Total de ocorrências:", len(ocorrencias))
+        print("\n" + "=" * 45)
+        print(f"Total de ocorrências cadastradas: {len(ocorrencias)}")
+        print("=" * 45)
 
 
-# 5. SISTEMA PRINCIPAL
+# 6. SISTEMA PRINCIPAL
 def iniciar_sistema():
 
     while True:
 
         exibir_menu()
 
-        opcao = input("Escolha uma opção: ").strip()
+        opcao = input("\nEscolha uma opção: ").strip()
 
         if opcao == "1":
 
@@ -176,12 +210,14 @@ def iniciar_sistema():
 
         elif opcao == "0":
 
-            print("\nEncerrando o sistema. Até mais!")
+            print("\nSistema encerrado. Obrigada por utilizar o Neighborhood Action Dashboard!")
+
             break
 
         else:
 
-            print("\nOpção inválida. Escolha uma opção de 0 a 6.")
+            print("\nERRO: opção inválida.")
+            print("Digite um número entre 0 e 6.")
 
 
 # EXECUÇÃO DO PROGRAMA
