@@ -1,9 +1,14 @@
 
 
 
-from dados import ocorrencias
-from datetime import datetime
+try:
+    from .dados import ocorrencias
+    from .indicadores import exibir_indicadores
+except ImportError:
+    from dados import ocorrencias
+    from indicadores import exibir_indicadores
 
+from datetime import datetime
 
 # CATEGORIAS DISPONÍVEIS
 CATEGORIAS = {
@@ -206,7 +211,7 @@ def iniciar_sistema():
 
         elif opcao == "6":
 
-            print("\nFuncionalidade de indicadores em integração.")
+            exibir_indicadores()
 
         elif opcao == "0":
 
