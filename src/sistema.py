@@ -1,10 +1,22 @@
 from datetime import datetime
 
 try:
-    from .estruturas import ocorrencias, adicionar_ocorrencia
+    from .estruturas import (
+        ocorrencias,
+        adicionar_ocorrencia,
+        buscar_por_codigo,
+        atualizar_status_estrutura,
+        consultar_historico_codigo
+    )
     from .indicadores import exibir_indicadores
 except ImportError:
-    from estruturas import ocorrencias, adicionar_ocorrencia
+    from estruturas import (
+        ocorrencias,
+        adicionar_ocorrencia,
+        buscar_por_codigo,
+        atualizar_status_estrutura,
+        consultar_historico_codigo
+    )
     from indicadores import exibir_indicadores
 
 # CATEGORIAS DISPONÍVEIS
@@ -13,6 +25,13 @@ CATEGORIAS = {
     2: "Acessibilidade",
     3: "Limpeza",
     4: "Conservação"
+}
+
+# STATUS DISPONÍVEIS
+STATUS = {
+    1: "Aberta",
+    2: "Em análise",
+    3: "Concluída"
 }
 
 
@@ -62,7 +81,20 @@ def exibir_menu():
     print("=" * 45)
 
 
-# 4. CADASTRAR OCORRÊNCIA
+# 4. EXIBIR UMA OCORRÊNCIA
+def exibir_ocorrencia(ocorrencia):
+
+    print("\n" + "-" * 45)
+
+    print(f"Código: {ocorrencia['codigo']}")
+    print(f"Categoria: {ocorrencia['categoria']}")
+    print(f"Descrição: {ocorrencia['descricao']}")
+    print(f"Localidade: {ocorrencia['localidade']}")
+    print(f"Data de abertura: {ocorrencia['data_abertura']}")
+    print(f"Status: {ocorrencia['status']}")
+
+
+# 5. CADASTRAR OCORRÊNCIA
 def cadastrar_ocorrencia():
 
     print("\n" + "=" * 45)
@@ -128,13 +160,13 @@ def cadastrar_ocorrencia():
         "status": "Aberta"
     }
 
-  # Adicionar ocorrência e atualizar todas as estruturas
+    # Adicionar ocorrência e atualizar todas as estruturas
 
     sucesso, mensagem = adicionar_ocorrencia(nova_ocorrencia)
 
     if not sucesso:
-    print(f"\nERRO: {mensagem}")
-    return
+        print(f"\nERRO: {mensagem}")
+        return
 
     # Confirmar cadastro
     print("\n" + "=" * 45)
@@ -152,7 +184,7 @@ def cadastrar_ocorrencia():
     print("Guarde o código para consultar a ocorrência.")
 
 
-# 5. LISTAR OCORRÊNCIAS
+# 6. LISTAR OCORRÊNCIAS
 def listar_ocorrencias():
 
     print("\n" + "=" * 45)
@@ -168,21 +200,184 @@ def listar_ocorrencias():
 
         for ocorrencia in ocorrencias:
 
-            print("\n" + "-" * 45)
-
-            print(f"Código: {ocorrencia['codigo']}")
-            print(f"Categoria: {ocorrencia['categoria']}")
-            print(f"Descrição: {ocorrencia['descricao']}")
-            print(f"Localidade: {ocorrencia['localidade']}")
-            print(f"Data de abertura: {ocorrencia['data_abertura']}")
-            print(f"Status: {ocorrencia['status']}")
+            exibir_ocorrencia(ocorrencia)
 
         print("\n" + "=" * 45)
         print(f"Total de ocorrências cadastradas: {len(ocorrencias)}")
         print("=" * 45)
 
 
-# 6. SISTEMA PRINCIPAL
+# 7. PESQUISAR OCORRÊNCIA PELO CÓDIGO
+def pesquisar_ocorrencia():
+
+    print("\n" + "=" * 45)
+    print("         PESQUISA DE OCORRÊNCIA")
+    print("=" * 45)
+
+    codigo = input("\nDigite o código (exemplo: OC001): ").strip()
+
+    if not codigo:
+        print("\nERRO: informe o código da ocorrência.")
+        return
+
+    # A busca usa o dicionário, sem percorrer a lista inteira
+    ocorrencia = buscar_por_codigo(codigo)
+
+    if ocorrencia is None:
+        print(f"\nOcorrência {codigo.upper()} não encontrada.")
+        print("Confira o código ou use a opção 2 para ver a lista.")
+        return
+
+    exibir_ocorrencia(ocorrencia)
+
+    # Mostrar o histórico, do evento mais recente ao mais antigo
+    historico = consultar_historico_codigo(codigo)
+
+    print("\nHistórico (do mais recente ao mais antigo):")
+
+    if len(historico) == 0:
+        print("Nenhum evento registrado.")
+
+    for evento in historico:
+
+        if evento["status_anterior"] is None:
+            mudanca = f"{evento['acao']} -> {evento['status_novo']}"
+        else:
+            mudanca = (
+                f"{evento['acao']}: {evento['status_anterior']} "
+                f"-> {evento['status_novo']}"
+            )
+
+        print(f"{evento['data_hora']} | {mudanca}")
+
+    print("=" * 45)
+
+
+# 8. FILTRAR OCORRÊNCIAS
+def filtrar_ocorrencias():
+
+    print("\n" + "=" * 45)
+    print("         FILTRAR OCORRÊNCIAS")
+    print("=" * 45)
+
+    print("1 - Por categoria")
+    print("2 - Por status")
+    print("0 - Voltar")
+
+    tipo = input("\nEscolha o tipo de filtro: ").strip()
+
+    if tipo == "1":
+
+        print("\nCategorias disponíveis:")
+
+        for indice, categoria in CATEGORIAS.items():
+            print(f"{indice} - {categoria}")
+
+        escolha = input("\nDigite o número da categoria: ").strip()
+
+        if not escolha.isdigit() or int(escolha) not in CATEGORIAS:
+            print("\nERRO: categoria não encontrada.")
+            print("Escolha uma opção entre 1 e 4.")
+            return
+
+        campo = "categoria"
+        valor = CATEGORIAS[int(escolha)]
+
+    elif tipo == "2":
+
+        print("\nStatus disponíveis:")
+
+        for indice, status in STATUS.items():
+            print(f"{indice} - {status}")
+
+        escolha = input("\nDigite o número do status: ").strip()
+
+        if not escolha.isdigit() or int(escolha) not in STATUS:
+            print("\nERRO: status não encontrado.")
+            print("Escolha uma opção entre 1 e 3.")
+            return
+
+        campo = "status"
+        valor = STATUS[int(escolha)]
+
+    elif tipo == "0":
+
+        return
+
+    else:
+
+        print("\nERRO: opção inválida.")
+        print("Digite 1, 2 ou 0.")
+        return
+
+    encontradas = 0
+
+    print("\n" + "=" * 45)
+    print(f"   RESULTADO DO FILTRO: {valor}")
+    print("=" * 45)
+
+    for ocorrencia in ocorrencias:
+
+        if ocorrencia[campo] == valor:
+
+            exibir_ocorrencia(ocorrencia)
+            encontradas += 1
+
+    if encontradas == 0:
+
+        print("\nNenhuma ocorrência encontrada para este filtro.")
+
+    else:
+
+        print("\n" + "=" * 45)
+        print(f"Total encontrado: {encontradas}")
+        print("=" * 45)
+
+
+# 9. ATUALIZAR STATUS
+def atualizar_status():
+
+    print("\n" + "=" * 45)
+    print("          ATUALIZAR STATUS")
+    print("=" * 45)
+
+    codigo = input("\nDigite o código (exemplo: OC001): ").strip()
+
+    ocorrencia = buscar_por_codigo(codigo)
+
+    if ocorrencia is None:
+        print(f"\nOcorrência {codigo.upper()} não encontrada.")
+        print("Confira o código ou use a opção 2 para ver a lista.")
+        return
+
+    print(f"\nStatus atual: {ocorrencia['status']}")
+
+    print("\nNovo status:")
+
+    for indice, status in STATUS.items():
+        print(f"{indice} - {status}")
+
+    escolha = input("\nDigite o número do novo status: ").strip()
+
+    if not escolha.isdigit() or int(escolha) not in STATUS:
+        print("\nERRO: status não encontrado.")
+        print("Escolha uma opção entre 1 e 3.")
+        return
+
+    # Atualiza o status e registra o evento no histórico
+    sucesso, mensagem = atualizar_status_estrutura(
+        codigo,
+        STATUS[int(escolha)]
+    )
+
+    if not sucesso:
+        print(f"\nERRO: {mensagem}")
+        return
+
+    print(f"\n{mensagem}")
+
+
+# 10. SISTEMA PRINCIPAL
 def iniciar_sistema():
 
     while True:
@@ -201,15 +396,15 @@ def iniciar_sistema():
 
         elif opcao == "3":
 
-            print("\nFuncionalidade de pesquisa em integração.")
+            pesquisar_ocorrencia()
 
         elif opcao == "4":
 
-            print("\nFuncionalidade de filtros em integração.")
+            filtrar_ocorrencias()
 
         elif opcao == "5":
 
-            print("\nFuncionalidade de atualização em integração.")
+            atualizar_status()
 
         elif opcao == "6":
 
