@@ -21,15 +21,15 @@ Neighborhood Action
 - **Reinaldo Dias Esteves Macieira Junior** – RM 576318
 
   
-##👩‍🏫 Professores
+## 👩‍🏫 Professores
 
-Tutor
+### Tutor
 
-André Tritiak
+- André Tritiak
 
-Coordenador
+### Coordenador
 
-Valter Santiago
+- Valter Santiago
 
 ## 📜 Descrição
 
