@@ -117,8 +117,8 @@ Nesta versão, os registros são mantidos em memória durante a execução do pr
 
 **Participação na Competição:**
 
-- [ ] Sim, aceitamos participar.
-- [ x ] Não vamos participar.
+- [ x ] Sim, aceitamos participar.
+- [  ] Não vamos participar.
 
 **Outras observações:**
 
