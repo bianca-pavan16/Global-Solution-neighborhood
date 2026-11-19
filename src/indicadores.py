@@ -1,8 +1,8 @@
 
 try:
-    from .dados import ocorrencias
+    from .estruturas import ocorrencias
 except ImportError:
-    from dados import ocorrencias
+    from estruturas import ocorrencias
 from datetime import datetime, date
 import matplotlib.pyplot as plt
 import os
