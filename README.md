@@ -76,7 +76,7 @@ Abaixo está a organização dos diretórios e arquivos do projeto:
 
 ### 🔗 Links do Projeto
 
-- [**Repositório GitHub**](https://github.com/bianca-pavan16/Global-Solution-neighborhood) – Código-fonte e documentação do projeto.
+- [**Repositório GitHub**](https://github.com/bianca-pavan16/Global-Solution-neighborhood) 
 - [**Vídeo de apresentação**](https://youtu.be/0uySB2yZWN0)
 
 
