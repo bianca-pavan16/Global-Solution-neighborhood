@@ -1,14 +1,11 @@
-
-
+from datetime import datetime
 
 try:
-    from .dados import ocorrencias
+    from .estruturas import ocorrencias, adicionar_ocorrencia
     from .indicadores import exibir_indicadores
 except ImportError:
-    from dados import ocorrencias
+    from estruturas import ocorrencias, adicionar_ocorrencia
     from indicadores import exibir_indicadores
-
-from datetime import datetime
 
 # CATEGORIAS DISPONÍVEIS
 CATEGORIAS = {
@@ -131,8 +128,13 @@ def cadastrar_ocorrencia():
         "status": "Aberta"
     }
 
-    # Adicionar ocorrência à lista principal
-    ocorrencias.append(nova_ocorrencia)
+  # Adicionar ocorrência e atualizar todas as estruturas
+
+    sucesso, mensagem = adicionar_ocorrencia(nova_ocorrencia)
+
+    if not sucesso:
+    print(f"\nERRO: {mensagem}")
+    return
 
     # Confirmar cadastro
     print("\n" + "=" * 45)
