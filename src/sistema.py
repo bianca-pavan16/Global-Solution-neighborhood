@@ -1,4 +1,5 @@
 from datetime import datetime
+from .dados import carregar_dados_iniciais
 
 try:
     from .estruturas import (
@@ -18,6 +19,7 @@ except ImportError:
         consultar_historico_codigo
     )
     from indicadores import exibir_indicadores
+    from dados import carregar_dados_iniciais
 
 # CATEGORIAS DISPONÍVEIS
 CATEGORIAS = {
@@ -379,7 +381,16 @@ def atualizar_status():
 
 # 10. SISTEMA PRINCIPAL
 def iniciar_sistema():
+    resumo = carregar_dados_iniciais()
 
+    print(
+        f"Dados carregados: "
+        f"{resumo['ocorrencias_carregadas']} ocorrências e "
+        f"{resumo['eventos_carregados']} eventos de histórico."
+    )
+
+    for aviso in resumo["avisos"]:
+        print(f"Aviso: {aviso}")
     while True:
 
         exibir_menu()
