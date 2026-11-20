@@ -1,0 +1,9 @@
+evento_id,ocorrencia_id,data_evento,status_anterior,status_novo,descricao_evento
+EV001,OC003,2026-10-04,aberta,em análise,Ocorrência encaminhada para avaliação da iluminação
+EV002,OC003,2026-10-06,em análise,concluída,Iluminação do trecho regularizada
+EV003,OC006,2026-10-07,aberta,em análise,Ausência de sinalização tátil encaminhada para análise
+EV004,OC006,2026-10-10,em análise,concluída,Sinalização tátil simulada como instalada
+EV005,OC009,2026-10-10,aberta,em análise,Lixeira danificada encaminhada para análise
+EV006,OC009,2026-10-12,em análise,concluída,Lixeira simulada como reparada e área limpa
+EV007,OC012,2026-10-13,aberta,em análise,Brinquedo danificado encaminhado para vistoria
+EV008,OC012,2026-10-15,em análise,concluída,Peça do brinquedo simulada como substituída
