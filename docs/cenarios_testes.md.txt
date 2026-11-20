@@ -1,0 +1,51 @@
+# Plano de cenários de teste de qualidade — Global Solution 2026.2
+
+> **Planejamento, não laudo de execução.** Todos os resultados estão **NÃO EXECUTADO** até que o código integrado seja testado. Ajustar as instruções à interface real do grupo.
+
+## Preparação
+
+1. Conferir que o `sistema.py` atualizado está no repositório e carrega os arquivos esperados em `dados/`.
+2. Executar `python src/sistema.py` a partir da raiz do projeto.
+3. Guardar uma cópia dos dados originais; cadastros e atualizações podem alterar contagens ou persistência.
+4. Usar `OC013` (categoria vazia) para testar dados inválidos **sem** contá-la como ocorrência válida.
+
+## Casos de teste
+
+| ID | Teste | Ação / entrada sugerida | Resultado esperado | Resultado real | Situação |
+|---|---|---|---|---|---|
+| T01 | Inicialização | Abrir o sistema | Menu é exibido sem erro; dados carregados conforme a implementação | — | NÃO EXECUTADO |
+| T02 | Lista inicial | Listar ocorrências | Exibir 12 registros válidos; OC013 é rejeitada ou identificada como inválida | — | NÃO EXECUTADO |
+| T03 | Cadastro válido | Cadastrar ID novo com categoria e demais campos válidos | Cadastro confirmado e registro consultável | — | NÃO EXECUTADO |
+| T04 | Categoria ausente | Cadastrar com categoria vazia | Mensagem de validação; não cadastrar como ocorrência válida | — | NÃO EXECUTADO |
+| T05 | Categoria inválida | Usar categoria fora das quatro permitidas | Mensagem clara de erro, sem interromper o programa | — | NÃO EXECUTADO |
+| T06 | ID duplicado | Tentar cadastrar código já existente (`OC001`) | Impedir duplicidade; informar ao usuário | — | NÃO EXECUTADO |
+| T07 | Data inválida | Informar `2026-02-31` no cadastro | Rejeitar data inexistente sem encerrar o programa | — | NÃO EXECUTADO |
+| T08 | Busca existente | Pesquisar `OC003` | Mostrar ocorrência correspondente | — | NÃO EXECUTADO |
+| T09 | Busca inexistente | Pesquisar `OC999` | Informar registro não encontrado | — | NÃO EXECUTADO |
+| T10 | Filtro por categoria | Filtrar `iluminação` na base original | Retornar OC001, OC002 e OC003 (3 registros) | — | NÃO EXECUTADO |
+| T11 | Filtro por status | Filtrar `aberta` na base original | Retornar OC001, OC004, OC007 e OC010 (4 registros) | — | NÃO EXECUTADO |
+| T12 | Atualização válida | Alterar ocorrência aberta para `em análise` | Atualizar status e registrar evento no histórico | — | NÃO EXECUTADO |
+| T13 | Atualização inválida | Tentar status não reconhecido | Rejeitar alteração e explicar o erro | — | NÃO EXECUTADO |
+| T14 | Status sem mudança | Tentar atualizar para o mesmo status atual | Não criar atualização redundante, conforme a regra adotada | — | NÃO EXECUTADO |
+| T15 | Histórico | Consultar histórico de `OC003` | Localizar eventos correspondentes, se o CSV for integrado | — | NÃO EXECUTADO |
+| T16 | Indicadores iniciais | Abrir painel antes de qualquer alteração | 12 válidas; 3 por categoria e 4 por status; percentuais coerentes | — | NÃO EXECUTADO |
+| T17 | Indicadores atualizados | Cadastrar/alterar uma ocorrência e abrir indicadores | Recalcular quantidades e percentuais com base nas válidas | — | NÃO EXECUTADO |
+| T18 | Inconsistência no CSV | Carregar `OC013`, com categoria vazia | Identificar/tratar inconsistência sem interromper a aplicação | — | NÃO EXECUTADO |
+| T19 | Histórico inicial | Ler `dados/historico.csv` | Encontrar 8 eventos válidos, com IDs de ocorrência existentes | — | NÃO EXECUTADO |
+| T20 | Navegação | Entrar e voltar de diferentes opções do menu | Permitir continuar usando e encerrar sem erro | — | NÃO EXECUTADO |
+
+## Como preencher os resultados
+
+Para cada caso, substituir `—` pelo comportamento observado, e `NÃO EXECUTADO` por `APROVADO`, `REPROVADO` ou `BLOQUEADO`. Se um teste falhar, registrar qual entrada foi utilizada e a mensagem ou o erro observado. Se alguma regra for diferente no código, alinhar com o grupo e ajustar o resultado esperado.
+
+**Nota:** os totais T10, T11 e T16 se referem ao CSV original, sem alterações de cadastro ou status. O teste T07 é uma boa prática de qualidade compatível com o relato do grupo, mas não substitui os requisitos mínimos de validação do enunciado.
+
+## Resumo da execução (preencher depois)
+
+- Data e versão/commit do sistema: **[PREENCHER]**
+- Responsável pela execução: **[PREENCHER]**
+- Aprovados: **[PREENCHER]**
+- Reprovados: **[PREENCHER]**
+- Bloqueados / não executados: **[PREENCHER]**
+- Evidências / anotações: **[PREENCHER]**
+- Conclusão da qualidade: **[PREENCHER APÓS OS TESTES]**

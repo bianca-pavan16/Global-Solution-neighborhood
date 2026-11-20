@@ -1,0 +1,7 @@
+# Uso de inteligência artificial
+
+**Ferramenta utilizada:** Claude.
+
+O Claude foi utilizado para auxiliar na **organização dos códigos** do projeto e na **preparação do vídeo de apresentação**.
+
+Os códigos e o material do vídeo deverão ser revisados e conferidos pela equipe antes da entrega.
